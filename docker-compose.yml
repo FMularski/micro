@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  keycloak:
+    env_file:
+      - ./keycloak/.env
+    image: keycloak/keycloak
+    command: start-dev
+    ports:
+      - "8080:8080"
