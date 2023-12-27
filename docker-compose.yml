@@ -2,14 +2,14 @@ version: "3.9"
 
 services:
   pgadmin:
-      image: dpage/pgadmin4
-      restart: always
-      env_file:
-        - ./pgadmin/.env
-      ports:
-        - "8888:80"
-      depends_on:
-        - keycloak-psql
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - ./pgadmin/.env
+    ports:
+      - "8888:80"
+    depends_on:
+      - keycloak-psql
 
   mq:
     image: rabbitmq:3.12.10-management
@@ -17,7 +17,7 @@ services:
       - "15672:15672"
       - "5672:5672"
     volumes:
-      - "mq_data:/data"
+      - mq-data:/data
 
   nginx:
     build:
@@ -26,7 +26,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - users_static:/home/app/users_static
+      - users-static:/home/app/users_static
     depends_on:
       users:
         condition: service_started
@@ -36,6 +36,8 @@ services:
     restart: always
     env_file:
       - ./keycloak/.env
+    volumes:
+      - keycloak-psql-data:/var/lib/postgresql/data
 
   keycloak:
     env_file:
@@ -56,6 +58,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - users-psql-data:/var/lib/postgresql/data
 
   users:
     build:
@@ -65,11 +69,13 @@ services:
       - 8000
     volumes:
       - ./users:/app
-      - users_static:/app/users_static
+      - users-static:/app/users_static
     depends_on:
       users-psql:
         condition: service_healthy
 
 volumes:
-  mq_data:
-  users_static:
+  keycloak-psql-data:
+  users-psql-data:
+  mq-data:
+  users-static:
