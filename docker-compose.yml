@@ -1,21 +1,29 @@
 version: "3.9"
 
 services:
+  pgadmin:
+      image: dpage/pgadmin4
+      restart: always
+      env_file:
+        - ./pgadmin/.env
+      ports:
+        - "8888:80"
+      depends_on:
+        - keycloak-psql
+
+  mq:
+    image: rabbitmq:3.12.10-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "mq_data:/data"
+
   keycloak-psql:
     image: postgres:13
     restart: always
     env_file:
       - ./keycloak/.env
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - ./keycloak/.env
-    ports:
-      - "8888:80"
-    depends_on:
-      - keycloak-psql
 
   keycloak:
     env_file:
@@ -27,13 +35,15 @@ services:
     depends_on:
       - keycloak-psql
 
-  mq:
-    image: rabbitmq:3.12.10-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    volumes:
-      - "mq_data:/data"
+  users-psql:
+    image: postgres:13
+    env_file:
+      - ./users/users/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mq_data:
