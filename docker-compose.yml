@@ -26,3 +26,14 @@ services:
       - "8080:8080"
     depends_on:
       - keycloak-psql
+
+  mq:
+    image: rabbitmq:3.12.10-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "mq_data:/data"
+
+volumes:
+  mq_data:
