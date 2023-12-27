@@ -28,3 +28,4 @@ USER appuser
 
 COPY . .
 
+RUN python3 manage.py collectstatic --noinput

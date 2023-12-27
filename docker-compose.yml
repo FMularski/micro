@@ -19,6 +19,18 @@ services:
     volumes:
       - "mq_data:/data"
 
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - users_static:/home/app/users_static
+    depends_on:
+      users:
+        condition: service_started
+
   keycloak-psql:
     image: postgres:13
     restart: always
@@ -48,14 +60,16 @@ services:
   users:
     build:
       context: ./users
-    command: python3 manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"
+    command: gunicorn users.wsgi:application --bind=0.0.0.0:8000 --reload
+    expose:
+      - 8000
     volumes:
       - ./users:/app
+      - users_static:/app/users_static
     depends_on:
       users-psql:
         condition: service_healthy
 
 volumes:
   mq_data:
+  users_static:
