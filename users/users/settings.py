@@ -135,3 +135,10 @@ STATIC_ROOT = BASE_DIR / "users_static"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.User"
+
+# rabbitmq
+MQ_USERNAME = env.str("MQ_USERNAME")
+MQ_PASSWORD = env.str("MQ_PASSWORD")
+MQ_HOST = env.str("MQ_HOST")
+MQ_PORT = env.str("MQ_PORT")
+MQ_URL = f"amqp://{MQ_USERNAME}:{MQ_PASSWORD}@{MQ_HOST}:{MQ_PORT}"
