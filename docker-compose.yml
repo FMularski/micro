@@ -95,6 +95,13 @@ services:
     volumes:
       - ./email:/app
 
+  email-celery:
+    build:
+      context: ./email
+    command: celery -A email_service worker -l INFO
+    volumes:
+      - ./email:/app
+
 volumes:
   keycloak-psql-data:
   users-psql-data:
