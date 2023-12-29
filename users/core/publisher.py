@@ -2,6 +2,7 @@ import json
 
 import pika
 from django.conf import settings
+from pika.exceptions import StreamLostError
 
 
 class Publisher:
@@ -46,7 +47,7 @@ class Publisher:
     ):
         try:
             self._publish(msg, exchange, routing_key, properties)
-        except:
+        except (AttributeError, StreamLostError):
             self.connect(exchange, exchange_type, queue, routing_key)
             self._publish(msg, exchange, routing_key, properties)
 
