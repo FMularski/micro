@@ -1,3 +1,5 @@
+import json
+
 import pika
 from core import tasks
 from django.conf import settings
@@ -27,7 +29,11 @@ class Consumer:
     def send_welcome_email(self, channel, method, properties, body):
         print("Consuming message from queue: user-created")
         print("Firing callback: send_welcome_email")
-        tasks.queue_email.delay()
+
+        decoded = body.decode()
+        username, email = json.loads(decoded).values()
+
+        tasks.queue_welcome_email.delay(username, email)
 
     def _bind_queues_to_callback(self):
         for queue, callback in self.QUEUES_CALLBACKS.items():
