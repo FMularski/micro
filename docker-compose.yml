@@ -74,6 +74,15 @@ services:
       users-psql:
         condition: service_healthy
 
+  email:
+    build:
+      context: ./email
+    command: gunicorn email_service.wsgi:application --bind=0.0.0.0:8001 --reload
+    expose:
+      - 8001
+    volumes:
+      - ./email:/app
+
 volumes:
   keycloak-psql-data:
   users-psql-data:
