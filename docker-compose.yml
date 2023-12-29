@@ -12,12 +12,15 @@ services:
       - keycloak-psql
 
   mq:
-    image: rabbitmq:3.12.10-management
+    build: 
+      context: ./mq
     ports:
       - "15672:15672"
       - "5672:5672"
     volumes:
       - mq-data:/data
+      - ./mq/definitions.json:/opt/definitions.json:ro
+      - ./mq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 5s
