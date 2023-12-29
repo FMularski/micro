@@ -82,27 +82,6 @@ services:
       users-psql:
         condition: service_healthy
 
-  email-psql:
-    image: postgres:13
-    env_file:
-      - ./email/email_service/.env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - email-psql-data:/var/lib/postgresql/data
-
-  email:
-    build:
-      context: ./email
-    command: gunicorn email_service.wsgi:application --bind=0.0.0.0:8001 --reload
-    expose:
-      - 8001
-    volumes:
-      - ./email:/app
-
   email-celery:
     build:
       context: ./email
@@ -127,6 +106,5 @@ services:
 volumes:
   keycloak-psql-data:
   users-psql-data:
-  email-psql-data:
   mq-data:
   users-static:
