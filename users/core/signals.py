@@ -2,9 +2,10 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from . import publisher
+from .publisher import Publisher
 
 User = get_user_model()
+publisher = Publisher()
 
 
 @receiver(post_save, sender=User)
@@ -18,9 +19,8 @@ def queue_user_created(instance, created, **kwargs):
     }
 
     publisher.publish(
-        method="user_created",
-        body=body,
-        routing_key="user_created",
+        msg=body,
         exchange="email",
         queue="user-created",
+        routing_key="user-created",
     )
