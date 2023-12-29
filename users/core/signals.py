@@ -10,7 +10,7 @@ publisher = Publisher()
 
 @receiver(post_save, sender=User)
 def queue_user_created(instance, created, **kwargs):
-    if not created:
+    if not created or not instance.email:
         return
 
     body = {
