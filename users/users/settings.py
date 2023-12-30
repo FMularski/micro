@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY")
+SECRET_KEY = env.str("SECRET_KEY", "default-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", True)
@@ -83,11 +83,11 @@ WSGI_APPLICATION = "users.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB", "postgres"),
-        "USER": env.str("POSTGRES_USER", "postgres"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD", "postgres"),
-        "HOST": env.str("POSTGRES_HOST", "localhost"),
-        "PORT": env.str("POSTGRES_PORT", 5432),
+        "NAME": env.str("POSTGRES_DB", "users"),
+        "USER": env.str("POSTGRES_USER", "users"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD", "users"),
+        "HOST": env.str("POSTGRES_HOST", "users-psql"),
+        "PORT": env.str("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -137,8 +137,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "core.User"
 
 # rabbitmq
-MQ_USERNAME = env.str("MQ_USERNAME")
-MQ_PASSWORD = env.str("MQ_PASSWORD")
-MQ_HOST = env.str("MQ_HOST")
-MQ_PORT = env.str("MQ_PORT")
+MQ_USERNAME = env.str("MQ_USERNAME", "users")
+MQ_PASSWORD = env.str("MQ_PASSWORD", "users")
+MQ_HOST = env.str("MQ_HOST", "mq")
+MQ_PORT = env.str("MQ_PORT", "5672")
 MQ_URL = f"amqp://{MQ_USERNAME}:{MQ_PASSWORD}@{MQ_HOST}:{MQ_PORT}"
