@@ -72,7 +72,10 @@ services:
   users:
     build:
       context: ./users
-    command: gunicorn users.wsgi:application --bind=0.0.0.0:8000 --reload
+    command: > 
+      sh -c "python3 manage.py migrate &&
+             python3 manage.py create_admin &&
+             gunicorn users.wsgi:application --bind=0.0.0.0:8000 --reload"
     expose:
       - 8000
     volumes:
