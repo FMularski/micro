@@ -8,8 +8,6 @@ services:
       - ./pgadmin/.env
     ports:
       - "8888:80"
-    depends_on:
-      - keycloak-psql
 
   mq:
     build: 
@@ -46,6 +44,7 @@ services:
       - ./keycloak/.env
     volumes:
       - keycloak-psql-data:/var/lib/postgresql/data
+    profiles: ['keycloak']
 
   keycloak:
     env_file:
@@ -56,6 +55,7 @@ services:
       - "8080:8080"
     depends_on:
       - keycloak-psql
+    profiles: ['keycloak']
 
   users-psql:
     image: postgres:13
