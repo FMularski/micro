@@ -23,7 +23,7 @@ Demo project presenting an implementation of an event-driven communication betwe
 
 * Download the project to your local machine
 ```bash
-git clone https://github.com/FMularski/thebitbybit-recruitment.git
+git clone https://github.com/FMularski/micro.git
 ```
 
 * Create the following .env files:
@@ -55,6 +55,12 @@ MQ_PORT=5672
 
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 EMAIL_HOST_USER=notifier@app.com
+```
+
+```bash
+# micro/pgadmin/.env
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=admin
 ```
 
 * Start the project with docker compose
